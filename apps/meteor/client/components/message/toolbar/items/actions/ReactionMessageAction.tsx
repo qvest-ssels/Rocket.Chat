@@ -1,6 +1,6 @@
 import { isOmnichannelRoom, type IMessage, type IRoom, type ISubscription } from '@rocket.chat/core-typings';
 import { useFeaturePreview } from '@rocket.chat/ui-client';
-import { useUser, useMethod } from '@rocket.chat/ui-contexts';
+import { useUser, useMethod, useSetting } from '@rocket.chat/ui-contexts';
 import { useTranslation } from 'react-i18next';
 
 import { useEmojiPickerData } from '../../../../../contexts/EmojiPickerContext';
@@ -20,8 +20,15 @@ const ReactionMessageAction = ({ message, room, subscription }: ReactionMessageA
 	const user = useUser();
 	const setReaction = useMethod('setReaction');
 	const quickReactionsEnabled = useFeaturePreview('quickReactions');
+	// Feature: Check if reactions are globally enabled
+	const reactionsEnabled = useSetting('Message_Reactions_Enabled', true);
 	const { quickReactions, addRecentEmoji } = useEmojiPickerData();
 	const { t } = useTranslation();
+
+	// Feature: Return null if reactions are disabled globally
+	if (!reactionsEnabled) {
+		return null;
+	}
 
 	if (!chat || !room || isOmnichannelRoom(room) || !subscription || message.private || !user) {
 		return null;

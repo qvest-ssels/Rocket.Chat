@@ -12,6 +12,7 @@ import { hasPermissionAsync } from '../../authorization/server/functions/hasPerm
 import { emoji } from '../../emoji/server';
 import { isTheLastMessage } from '../../lib/server/functions/isTheLastMessage';
 import { notifyOnMessageChange } from '../../lib/server/lib/notifyListener';
+import { settings } from '../../settings/server';
 
 export const removeUserReaction = (message: IMessage, reaction: string, username: string) => {
 	if (!message.reactions) {
@@ -106,6 +107,11 @@ export async function executeSetReaction(
 	messageParam: IMessage['_id'] | IMessage,
 	shouldReact?: boolean,
 ) {
+	// Feature: Check if reactions are globally enabled
+	if (!settings.get('Message_Reactions_Enabled')) {
+		throw new Meteor.Error('error-not-allowed', 'Reactions are disabled', { method: 'setReaction' });
+	}
+
 	// Check if the emoji is valid before proceeding
 	const reactionWithoutColons = reaction.replace(/:/g, '');
 	reaction = `:${reactionWithoutColons}:`;

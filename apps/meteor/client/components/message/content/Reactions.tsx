@@ -2,6 +2,7 @@ import { useToolbar } from '@react-aria/toolbar';
 import type { IMessage } from '@rocket.chat/core-typings';
 import { MessageReactions, MessageReactionAction } from '@rocket.chat/fuselage';
 import { useButtonPattern } from '@rocket.chat/fuselage-hooks';
+import { useSetting } from '@rocket.chat/ui-contexts';
 import type { HTMLAttributes, ReactElement } from 'react';
 import { useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,9 +21,16 @@ const Reactions = ({ message, ...props }: ReactionsProps): ReactElement => {
 	const hasReacted = useUserHasReacted(message);
 	const openEmojiPicker = useOpenEmojiPicker(message);
 	const { username } = useContext(MessageListContext);
+	// Feature: Check if reactions are globally enabled
+	const reactionsEnabled = useSetting('Message_Reactions_Enabled', true);
 	const toggleReactionMutation = useToggleReactionMutation();
 	const { toolbarProps } = useToolbar(props, ref);
 	const buttonProps = useButtonPattern(openEmojiPicker);
+
+	// Feature: Return null if reactions are disabled globally
+	if (!reactionsEnabled) {
+		return <></>;
+	}
 
 	return (
 		<MessageReactions ref={ref} {...toolbarProps} {...props}>

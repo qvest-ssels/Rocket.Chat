@@ -385,6 +385,13 @@ export const createMessageSettings = () =>
 			type: 'boolean',
 			public: true,
 		});
+		
+		// Feature: Enable/disable emoji reactions globally
+		await this.add('Message_Reactions_Enabled', true, {
+			type: 'boolean',
+			public: true,
+			i18nDescription: 'Message_Reactions_Enabled_Description',
+		});
 
 		await this.add('Message_CustomFields_Enabled', false, {
 			type: 'boolean',

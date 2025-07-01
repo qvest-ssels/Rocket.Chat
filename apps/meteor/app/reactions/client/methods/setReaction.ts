@@ -3,11 +3,17 @@ import type { ServerMethods } from '@rocket.chat/ddp-client';
 import { Meteor } from 'meteor/meteor';
 
 import { roomCoordinator } from '../../../../client/lib/rooms/roomCoordinator';
+import { settings } from '../../../settings/client';
 import { emoji } from '../../../emoji/client';
 import { Messages, Rooms, Subscriptions } from '../../../models/client';
 
 Meteor.methods<ServerMethods>({
 	async setReaction(reaction, messageId) {
+		// Feature: Check if reactions are globally enabled
+		if (!settings.get('Message_Reactions_Enabled')) {
+			return false;
+		}
+
 		if (!Meteor.userId()) {
 			throw new Meteor.Error(203, 'User_logged_out');
 		}

@@ -18,6 +18,7 @@ import {
 import { notifyUsersOnMessage } from '../../../lib/server/lib/notifyUsersOnMessage';
 import { sendAllNotifications } from '../../../lib/server/lib/sendNotificationsOnMessage';
 import { processThreads } from '../../../threads/server/hooks/aftersavemessage';
+import { settings } from '../../../settings/server';
 import { getUpload, requestEventsFromLatest } from '../handler';
 import { contextDefinitions } from '../lib/context';
 import { decryptIfNeeded } from '../lib/crypt';
@@ -398,6 +399,14 @@ const eventHandlers = {
 	// ROOM_SET_MESSAGE_REACTION
 	//
 	async [eventTypes.ROOM_SET_MESSAGE_REACTION](event) {
+		// Feature: Check if reactions are globally enabled
+		if (!settings.get('Message_Reactions_Enabled')) {
+			return {
+				success: false,
+				reason: 'Reactions are disabled',
+			};
+		}
+
 		const eventResult = await FederationRoomEvents.addEvent(event.context, event);
 
 		// If the event was successfully added, handle the event locally
@@ -446,6 +455,14 @@ const eventHandlers = {
 	// ROOM_UNSET_MESSAGE_REACTION
 	//
 	async [eventTypes.ROOM_UNSET_MESSAGE_REACTION](event) {
+		// Feature: Check if reactions are globally enabled
+		if (!settings.get('Message_Reactions_Enabled')) {
+			return {
+				success: false,
+				reason: 'Reactions are disabled',
+			};
+		}
+
 		const eventResult = await FederationRoomEvents.addEvent(event.context, event);
 
 		// If the event was successfully added, handle the event locally

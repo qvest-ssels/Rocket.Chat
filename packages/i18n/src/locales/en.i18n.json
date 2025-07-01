@@ -3319,6 +3319,8 @@
   "Message_Read_Receipt_Enabled": "Show Read Receipts",
   "Message_Read_Receipt_Store_Users": "Detailed Read Receipts",
   "Message_Read_Receipt_Store_Users_Description": "Shows each user's read receipts",
+  "Message_Reactions_Enabled": "Enable Emoji Reactions",
+  "Message_Reactions_Enabled_Description": "Allow users to add emoji reactions to messages. When disabled, all reaction functionality will be hidden and disabled.",
   "Message_ShowDeletedStatus": "Show Deleted Status",
   "Message_ShowEditedStatus": "Show Edited Status",
   "Message_ShowFormattingTips": "Show Formatting Tips",
